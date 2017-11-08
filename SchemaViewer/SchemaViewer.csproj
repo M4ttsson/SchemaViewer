@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\app\components\calendar\calendar.component.ts" />
-    <TypeScriptCompile Include="ClientApp\app\components\calendar\calendar.ts" />
+    <TypeScriptCompile Include="ClientApp\app\shared\calendar.ts" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">

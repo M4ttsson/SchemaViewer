@@ -6,31 +6,31 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
-import { HomeComponent } from './components/home/home.component';
-import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
+//import { HomeComponent } from './components/home/home.component';
+//import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
-import { CounterComponent } from './components/counter/counter.component';
+//import { CounterComponent } from './components/counter/counter.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         NavMenuComponent,
-        CounterComponent,
-        FetchDataComponent,
-        CalendarComponent,
-        HomeComponent
+        //CounterComponent,
+        //FetchDataComponent,
+        CalendarComponent
+        //HomeComponent
     ],
     imports: [
         CommonModule,
         HttpModule,
         FormsModule,
         RouterModule.forRoot([
-            { path: '', redirectTo: 'home', pathMatch: 'full' },
-            { path: 'home', component: HomeComponent },
-            { path: 'counter', component: CounterComponent },
-            { path: 'fetch-data', component: FetchDataComponent },
+            { path: '', redirectTo: 'calendar', pathMatch: 'full' },
+            //{ path: 'home', component: HomeComponent },
+            //{ path: 'counter', component: CounterComponent },
+            //{ path: 'fetch-data', component: FetchDataComponent },
             { path: 'calendar', component: CalendarComponent },
-            { path: '**', redirectTo: 'home' }
+            { path: '**', redirectTo: 'calendar' }
         ])
     ]
 })

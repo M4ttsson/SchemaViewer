@@ -15,7 +15,12 @@
 </div>
 
 
-<p *ngIf="!calendar.calendarEvents"><em>Loading...</em></p>
+<div *ngIf="errorMessage" class="alert alert-danger">
+    <p>Not able to show calendar: {{ errorMessage }}</p>
+</div>
+<div *ngIf="isLoading" class="text-info">
+    <em>Loading...</em>
+</div>
 
 <table class='table' *ngIf="calendar.calendarEvents">
     <thead>

@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SchemaViewer.Models;
+
 using System.IO;
 using System.Net;
 using Ical.Net;
+using SchemaViewer.Exceptions;
 
 namespace SchemaViewer.Controllers
 {
@@ -16,33 +18,30 @@ namespace SchemaViewer.Controllers
 		[HttpGet("[action]")] 
 		public IEnumerable<Models.CalendarEvent> GetCalendarEvents(string url)
 		{
-			// TODO: Error handling...
-			var calendarCollection = Calendar.LoadFromStream(GetIcalStream(url));
-			var firstCalendar = calendarCollection.First();
-
-			List<Models.CalendarEvent> events = new List<Models.CalendarEvent>();
-
-			foreach (var ev in firstCalendar.Events)
+			using (MemoryStream stream = GetIcalStream(url))
 			{
-				events.Add(new Models.CalendarEvent()
+				// check if this can be null? will there be exceptions if file is not icalendar valid?
+				var calendarCollection = Calendar.LoadFromStream(stream);
+				if(calendarCollection == null || !calendarCollection.Any())
 				{
-					Start = ev.Start.ToString(),
-					End = ev.End.ToString(),
-					Location = ev.Location,
-					Summary = ev.Summary
-				});
+					throw new ApiException("File at url contained no valid calendars");
+				}
+
+				List<Models.CalendarEvent> events = new List<Models.CalendarEvent>();
+
+				// multiple calendars in same file is unusual but allowed
+				foreach (var calendar in calendarCollection)
+				{
+					events.AddRange(calendar.Events.OrderBy(ev => ev.Start).Select(ev => new Models.CalendarEvent()
+					{
+						Start = ev.Start.AsSystemLocal.ToString("yy-MM-dd HH:mm"),
+						End = ev.End.AsSystemLocal.ToString("yy-MM-dd HH:mm"),
+						Location = ev.Location,
+						Summary = ev.Summary
+					}));
+				}
+				return events;
 			}
-			return events;
-			//return new List<Models.CalendarEvent>()
-			//{
-			//	new Models.CalendarEvent()
-			//	{
-			//		Start = DateTime.Now.AddDays(1).ToString("yy-MM-dd HH:mm"),
-			//		End = DateTime.Now.AddDays(1).AddHours(4).ToString("yy-MM-dd HH:mm"),
-			//		Location = "B089",
-			//		Summary = "Teacher, course name"
-			//	}
-			//};
 		}
 
 		private MemoryStream GetIcalStream(string url)
