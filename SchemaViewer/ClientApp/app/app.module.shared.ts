@@ -9,6 +9,7 @@ import { NavMenuComponent } from './components/navmenu/navmenu.component';
 //import { HomeComponent } from './components/home/home.component';
 //import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
+import { AboutComponent } from './components/about/about.component';
 //import { CounterComponent } from './components/counter/counter.component';
 
 @NgModule({
@@ -17,7 +18,8 @@ import { CalendarComponent } from './components/calendar/calendar.component';
         NavMenuComponent,
         //CounterComponent,
         //FetchDataComponent,
-        CalendarComponent
+        CalendarComponent,
+        AboutComponent
         //HomeComponent
     ],
     imports: [
@@ -25,12 +27,13 @@ import { CalendarComponent } from './components/calendar/calendar.component';
         HttpModule,
         FormsModule,
         RouterModule.forRoot([
-            { path: '', redirectTo: 'calendar', pathMatch: 'full' },
+            { path: '', redirectTo: 'home', pathMatch: 'full' },
             //{ path: 'home', component: HomeComponent },
             //{ path: 'counter', component: CounterComponent },
             //{ path: 'fetch-data', component: FetchDataComponent },
-            { path: 'calendar', component: CalendarComponent },
-            { path: '**', redirectTo: 'calendar' }
+            { path: 'home', component: CalendarComponent },
+            { path: 'about', component: AboutComponent },
+            { path: '**', redirectTo: 'home' }
         ])
     ]
 })

@@ -8,3 +8,15 @@
 @section scripts {
     <script src="~/dist/main-client.js" asp-append-version="true"></script>
 }
+
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js').then(function (registration) {
+            // Registration was successful
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }).catch(function (err) {
+            // registration failed :(
+            console.log('ServiceWorker registration failed: ', err);
+        });
+    }
+</script>
