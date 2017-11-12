@@ -1,4 +1,5 @@
-﻿import { Component, Inject } from '@angular/core';
+﻿import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common'
 import { Http, RequestOptions, URLSearchParams } from '@angular/http';
 import { CalendarEvent, Calendar } from "../../shared/calendar";
 
@@ -13,9 +14,18 @@ export class CalendarComponent {
     private isLoading: boolean;
     private calendarStorageKey = "calendarStorage";
 
-    constructor(private http: Http, @Inject('BASE_URL') private baseUrl: string) {
+    constructor(private http: Http, @Inject('BASE_URL') private baseUrl: string, @Inject(PLATFORM_ID) private platformId: Object) {
         this.calendar = new Calendar();
+
+        if (isPlatformBrowser(this.platformId)) {
+            let calTemp = localStorage.getItem(this.calendarStorageKey);
+            if (calTemp) {
+                this.calendar = JSON.parse(calTemp) as Calendar;
+            }
+        }
+
         this.isLoading = false;
+
     }
 
     onSubmit() {
@@ -23,7 +33,19 @@ export class CalendarComponent {
         this.isLoading = true;
 
         this.getCalendar();
+
+        if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem(this.calendarStorageKey, JSON.stringify(this.calendar));
+        }
     }
+
+    //getUrlFromCookie() :string {
+    //    return this.cookieService.get(this.calendarStorageKey);
+    //}
+
+    //saveUrlInCookie(url: string) {
+    //    this.cookieService.set(this.calendarStorageKey, url);
+    //}
 
     // look at this for service worker
     // https://houssein.me/progressive-angular-applications
@@ -46,6 +68,7 @@ export class CalendarComponent {
         console.error(error);
         this.errorMessage = error.message;
         this.isLoading = false;
+        this.calendar.calendarEvents = [];
     }
 }
 
